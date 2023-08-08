@@ -12,6 +12,12 @@ const addSchema = Joi.object({
   phone: Joi.string().required(),
 });
 
+const updateSchema = Joi.object({
+  name: Joi.string(),
+  email: Joi.string(),
+  phone: Joi.string(),
+});
+
 router.get("/", async (req, res, next) => {
   try {
     const result = await contacts.listContacts();
@@ -68,10 +74,10 @@ router.delete("/:contactId", async (req, res, next) => {
 
 router.put("/:contactId", async (req, res, next) => {
   try {
-    // const { error } = addSchema.validate(req.body);
-    // if (error) {
-    //   throw HttpError(404, "missing required name field");
-    // }
+    const { error } = updateSchema.validate(req.body);
+    if (error) {
+      throw HttpError(404, "missing required name field");
+    }
     const { contactId } = req.params;
     const result = await contacts.updateContact(contactId, req.body);
 
