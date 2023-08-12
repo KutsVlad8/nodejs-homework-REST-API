@@ -86,7 +86,7 @@ const updateFavorite = async (req, res, next) => {
   try {
     const { error } = favoriteSchema.validate(req.body);
     if (error) {
-      throw HttpError(404, "missing required name field");
+      throw HttpError(400, "missing field favorite");
     }
     const { contactId } = req.params;
     const result = await Contact.findByIdAndUpdate(contactId, req.body, {
