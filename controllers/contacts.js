@@ -23,7 +23,7 @@ const favoriteSchema = Joi.object({
   favorite: Joi.boolean().required(),
 });
 
-// !=================== api controllers ================
+// !=================== controllers ================
 
 const getAll = async (req, res, next) => {
   try {
