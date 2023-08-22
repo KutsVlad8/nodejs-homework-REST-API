@@ -26,7 +26,7 @@ const logInSchema = Joi.object({
 
 // !=================== controllers ================
 
-const register = async (req, res, next) => {
+const register = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email });
 
@@ -48,7 +48,7 @@ const register = async (req, res, next) => {
   });
 };
 
-const login = async (req, res, next) => {
+const login = async (req, res) => {
   const { error } = logInSchema.validate(req.body);
   if (error) {
     throw HttpError(404, "missing required  field");
@@ -71,13 +71,33 @@ const login = async (req, res, next) => {
   };
 
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "23h" });
-
+  await User.findByIdAndUpdate(user._id, { token });
   res.status(201).json({
     token,
+  });
+};
+
+const getCurrent = async (req, res) => {
+  const { email, name } = req.user;
+
+  res.json({
+    name,
+    email,
+  });
+};
+
+const logout = async (req, res) => {
+  const { _id } = req.user;
+  await User.findByIdAndUpdate(_id, { token: "" });
+
+  res.json({
+    message: "Logout success",
   });
 };
 
 module.exports = {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
+  getCurrent: ctrlWrapper(getCurrent),
+  logout: ctrlWrapper(logout),
 };
