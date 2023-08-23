@@ -70,7 +70,7 @@ const updateContact = async (req, res) => {
     throw HttpError(404, "missing required name field");
   }
   const { contactId } = req.params;
-  const result = await Contact.findByIdAndUpdate(
+  const result = await Contact.findOneAndUpdate(
     { _id: contactId, owner },
     req.body,
     {
@@ -92,7 +92,7 @@ const updateFavorite = async (req, res) => {
     throw HttpError(400, "missing field favorite");
   }
   const { contactId } = req.params;
-  const result = await Contact.findByIdAndUpdate(
+  const result = await Contact.findOneAndUpdate(
     { _id: contactId, owner },
     req.body,
     {
@@ -109,7 +109,7 @@ const updateFavorite = async (req, res) => {
 const remove = async (req, res) => {
   const { _id: owner } = req.user;
   const { contactId } = req.params;
-  const result = await Contact.findByIdAndRemove({ _id: contactId, owner });
+  const result = await Contact.findOneAndRemove({ _id: contactId, owner });
 
   if (!result) {
     throw HttpError(404, "Not found");
